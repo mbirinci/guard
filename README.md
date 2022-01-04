@@ -10,7 +10,7 @@ package main
 import "github.com/mbirinci/guard"
 
 type Sampling struct {
-	Probability float64
+  Probability float64
 }
 
 func main() {
