@@ -1,4 +1,4 @@
-package validation
+package guard
 
 import "errors"
 
@@ -21,19 +21,19 @@ type Result struct {
 	Reasons []string
 }
 
-type Validator[T any] struct {
+type Guard[T any] struct {
 	Strategy Strategy
 	rules    []rule[T]
 }
 
-func (v *Validator[T]) Rule(action Action[T], reason string) {
+func (v *Guard[T]) Rule(action Action[T], reason string) {
 	v.rules = append(v.rules, rule[T]{
 		action: action,
 		reason: reason,
 	})
 }
 
-func (v *Validator[T]) Validate(input T) (result Result, err error) {
+func (v *Guard[T]) Validate(input T) (result Result, err error) {
 
 	if len(v.rules) == 0 {
 		return Result{}, errors.New("could not found any rules to validate")

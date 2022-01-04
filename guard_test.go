@@ -1,15 +1,15 @@
-package validation_test
+package guard_test
 
 import (
+	"github.com/mbirinci/guard"
 	"testing"
-	"validation"
 )
 
 func TestValidator_ShouldFailedWhenNoRulesRegister(t *testing.T) {
 
-	pv := validation.Validator[string]{}
+	g := guard.Guard[string]{}
 
-	_, err := pv.Validate("test input")
+	_, err := g.Validate("test input")
 
 	if err == nil {
 		t.Error("no registered rules spec, err should not be nil")
