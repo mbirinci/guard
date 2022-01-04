@@ -1,3 +1,3 @@
-module github.com/mbirinci/shield
+module github.com/mbirinci/guard
 
 go 1.18
