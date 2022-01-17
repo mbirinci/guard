@@ -19,8 +19,8 @@ func main() {
     Strategy: guard.Eager, // specify validation strategy
   }
   
-  g.Rule(func(input Sampling) bool {
-    if input.Probability < 0 || input.Probability > 1 {
+  g.Must(func(s Sampling) bool {
+    if s.Probability < 0 || s.Probability > 1 {
       return false
     }
     return true
@@ -30,16 +30,56 @@ func main() {
     Probability: 0.03,
   }
   
-  result, err := g.Validate(s)
-  
-  if err != nil {
-    panic(err)
+  if results, ok := g.Validate(s); !ok {
+    // take your action when validation failed
+    for _, message := range results {
+      fmt.Println(message)
+    }
   }
-  
-  if !result.IsValid {
-    fmt.Println("validation failed")
-  }
+
+  // everything fine, keep going...
   
 }
 
 ``` 
+
+### Use Predefined Rules
+
+```go
+package main
+
+import "github.com/mbirinci/guard"
+
+type Sampling struct {
+  Probability float64
+}
+
+func main() {
+  
+  g := guard.Guard[Sampling]{
+    Strategy: guard.Eager, // specify validation strategy
+  }
+  
+  g.Rules(func(s Sampling) guard.Rule[] {
+    return guard.Rule[]{
+      guard.Equal(s.Probability, 0.3, "Probability field of Sampling must be equal to 0.3"),
+      guard.NotEmpty(s.Probability, "Probability field of Sampling must not be empty"),
+    }
+  })
+
+  s := Sampling{
+    Probability: 0.03,
+  }
+
+  if results, ok := g.Validate(s); !ok {
+    // take your action when validation failed
+    for _, message := range results {
+      fmt.Println(message)
+    }
+  }
+
+  // everything fine, keep going...
+
+}
+
+```
